@@ -6,12 +6,12 @@ function TodoList() {
   const [inProgressList, setInProgressList] = useState([]);
   const [doneList, setDoneList] = useState([]);
 
-  const [inputValue, setInputValue] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
-  const handleAddTodo = (category, index) => {
+  const dataMovements = (category, index) => {
     if (inputValue.trim() !== "") {
       switch (category) {
         case "todo":
@@ -45,9 +45,7 @@ function TodoList() {
           value={inputValue}
           onChange={handleInputChange}
         />
-        <button onClick={() => handleAddTodo("todo")}>Add Todo</button>
-        {/* <button onClick={() => handleProgress()}>In progress</button>
-        <button onClick={() => handleDone()}>Done</button> */}
+        <button onClick={() => dataMovements("todo")}>Add Todo</button>
       </div>
       <div className="d-flex flex-row">
         <div class="card">
@@ -59,7 +57,7 @@ function TodoList() {
                 <li key={index}>
                   {todo}
                   {
-                    <button onClick={() => handleAddTodo("inProgress", index)}>
+                    <button onClick={() => dataMovements("inProgress", index)}>
                       Add In Progress
                     </button>
                   }
@@ -78,7 +76,7 @@ function TodoList() {
                 <li key={index} draggable>
                   {todo}
                   {
-                    <button onClick={() => handleAddTodo("done", index)}>
+                    <button onClick={() => dataMovements("done", index)}>
                       Add Done
                     </button>
                   }
