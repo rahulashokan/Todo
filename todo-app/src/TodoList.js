@@ -2,98 +2,99 @@ import React, { useState } from "react";
 import "./style.css";
 
 function TodoList() {
-  const [todoList, setTodoList] = useState([]);
-  const [inProgressList, setInProgressList] = useState([]);
-  const [doneList, setDoneList] = useState([]);
+  const [todos, setTodos] = useState([
+    { id: 2, text: "Task 2", category: "todo" },
+    { id: 1, text: "Task 1", category: "inProgress" },
+    { id: 3, text: "Task 3", category: "done" },
+  ]);
 
-  const [inputValue, setInputValue] = useState("");
+  const [newTask, setNewTask] = useState("");
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
+  const handleInputChange = (e) => {
+    setNewTask(e.target.value);
   };
-  const dataMovements = (category, index) => {
-    if (inputValue.trim() !== "") {
-      switch (category) {
-        case "todo":
-          setTodoList([...todoList, inputValue]);
-          break;
-        case "inProgress":
-          setInProgressList([...inProgressList, todoList[index]]);
-          const newTodoList = [...todoList];
-          newTodoList.splice(index, 1);
-          setTodoList(newTodoList);
-          break;
-        case "done":
-          setDoneList([...doneList, inProgressList[index]]);
-          const newInProgressList = [...inProgressList];
-          newInProgressList.splice(index, 1);
-          setInProgressList(newInProgressList);
-          break;
-        default:
-          break;
-      }
+
+  const addTodo = (category) => {
+    if (newTask.trim() !== "") {
+      const newTodo = {
+        id: Date.now(),
+        text: newTask,
+        category: category,
+      };
+      setTodos([...todos, newTodo]);
+      setNewTask("");
     }
+  };
+
+  const moveTodo = (id, category) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => (todo.id === id ? { ...todo, category } : todo))
+    );
   };
 
   return (
     <div>
-      <h2>Todo List</h2>
-      <div class="card-top">
+      <div>
         <input
           type="text"
           placeholder="Input value"
-          value={inputValue}
+          value={newTask}
           onChange={handleInputChange}
         />
-        <button onClick={() => dataMovements("todo")}>Add Todo</button>
+        <button onClick={() => addTodo("todo")}>Add Todo</button>
       </div>
       <div className="d-flex flex-row">
-        <div class="card">
-          <div class="card-TOP">
+        <div className="card">
+          <div className="card-TOP">
             <h2>Todo</h2>
-            <div calss="card-body"></div>
-            <ul>
-              {todoList.map((todo, index) => (
-                <li key={index}>
-                  {todo}
-                  {
-                    <button onClick={() => dataMovements("inProgress", index)}>
-                      Add In Progress
-                    </button>
-                  }
-                </li>
-              ))}
-            </ul>
+            <div className="card-body">
+              <ul>
+                {todos
+                  .filter((todo) => todo.category === "todo")
+                  .map((todo) => (
+                    <li key={todo.id} className="task">
+                      {todo.text}
+                      <button onClick={() => moveTodo(todo.id, "inProgress")}>
+                        Start
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-TOP">
-            <h2>Progress</h2>
-            <div calss="card-body"></div>
-            <ul>
-              {inProgressList.map((todo, index) => (
-                <li key={index} draggable>
-                  {todo}
-                  {
-                    <button onClick={() => dataMovements("done", index)}>
-                      Add Done
-                    </button>
-                  }
-                </li>
-              ))}
-            </ul>
+        <div className="card">
+          <div className="card-TOP">
+            <h2>In Progress</h2>
+            <div className="card-body">
+              <ul>
+                {todos
+                  .filter((todo) => todo.category === "inProgress")
+                  .map((todo) => (
+                    <li key={todo.id} className="task">
+                      {todo.text}
+                      <button onClick={() => moveTodo(todo.id, "done")}>
+                        Finish
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-TOP">
+        <div className="card">
+          <div className="card-TOP">
             <h2>Done</h2>
-            <div calss="card-body"></div>
-            <ul>
-              {doneList.map((todo, index) => (
-                <li key={index}>{todo}</li>
-              ))}
-            </ul>
+            <div className="card-body">
+              <ul>
+                {todos
+                  .filter((todo) => todo.category === "done")
+                  .map((todo) => (
+                    <li key={todo.id}>{todo.text}</li>
+                  ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
