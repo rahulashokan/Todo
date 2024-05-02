@@ -6,8 +6,6 @@ function App() {
     <div className="App">
       <div clss="right-container">
         <TodoList />
-        {/* <TodoList />
-        <TodoList /> */}
       </div>
     </div>
   );
